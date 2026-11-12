@@ -1,5 +1,5 @@
 // ⚠️ REMPLACE CETTE URL PAR CELLE DE TON WORKER CLOUDFLARE ⚠️
-const WORKER_URL = "https://asentum-proxy.ton-pseudo.workers.dev";
+const WORKER_URL = "https://asentum-proxy.yggcomptemhd.workers.dev/";
 
 const POOL_ASE = 60000000;
 const PAGE_SIZE = 50;
