@@ -53,8 +53,10 @@
                     <input type="number" id="user-xp-input" value="100000" oninput="updateCalculations()">
                 </div>
                 <div class="stat-card">
-                    <label class="stat-label">XP Total Réseau (Est.)</label>
-                    <input type="number" id="total-xp-input" value="480000000" oninput="updateCalculations()">
+                    <label class="stat-label">XP Total Réseau (Auto)</label>
+                    <input type="text" id="total-xp-display" value="Chargement..." readonly style="color:#c084fc; cursor:default; border-color:transparent; background:transparent; padding-left:0;">
+                    <input type="hidden" id="total-xp-input" value="480000000">
+                    <span id="xp-sync-time" style="font-size:0.65rem; color:#6b7280; display:block; margin-top:2px;">Synchronisation...</span>
                 </div>
             </div>
 
