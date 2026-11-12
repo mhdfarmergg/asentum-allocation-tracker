@@ -1,9 +1,42 @@
-// ⚠️ REMPLACE CETTE URL PAR CELLE DE TON WORKER CLOUDFLARE ⚠️
+// ⚠️ TON URL DE WORKER CLOUDFLARE ⚠️
 const WORKER_URL = "https://asentum-proxy.yggcomptemhd.workers.dev/";
 
 const POOL_ASE = 60000000;
 const PAGE_SIZE = 50;
 let currentOffset = 0;
+
+// Chargement automatique du Total XP réseau au démarrage de la page
+async function fetchNetworkTotalXp() {
+    const displayEl = document.getElementById('total-xp-display');
+    const hiddenInput = document.getElementById('total-xp-input');
+    const syncTimeEl = document.getElementById('xp-sync-time');
+
+    if (!displayEl) return;
+
+    try {
+        const res = await fetch(`${WORKER_URL}/api/total-xp`);
+        if (!res.ok) throw new Error("Erreur réseau");
+        const data = await res.json();
+
+        if (data.totalXp) {
+            hiddenInput.value = data.totalXp;
+            displayEl.value = data.totalXp.toLocaleString('fr-FR') + " XP";
+            
+            if (data.updatedAt) {
+                const date = new Date(data.updatedAt);
+                syncTimeEl.innerText = `Synchronisé à ${date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            updateCalculations();
+        }
+    } catch (e) {
+        displayEl.value = "480 000 000 XP";
+        syncTimeEl.innerText = "Mode secours (valeur estimée)";
+        updateCalculations();
+    }
+}
+
+// Lancer la récupération dès que le DOM est prêt
+document.addEventListener("DOMContentLoaded", fetchNetworkTotalXp);
 
 async function startSearch(startOffset = 0) {
     const query = document.getElementById('wallet-input').value.trim().toLowerCase();
@@ -71,7 +104,7 @@ async function startSearch(startOffset = 0) {
             continueBtn.classList.remove('hidden');
         }
     } catch (e) {
-        statusEl.innerText = "❌ Erreur de connexion au Worker Cloudflare. Vérifie WORKER_URL dans app.js.";
+        statusEl.innerText = "❌ Erreur de connexion au Worker Cloudflare.";
         statusEl.style.color = "#f87171";
     } finally {
         btn.disabled = false;
